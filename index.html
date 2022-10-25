@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Custom input method</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="input.js"></script>
+    <script>
+        var lang = null;
+        var auto = null;
+
+        var state = null;
+        var last_pos = null;
+
+        var stack = [];
+        var seq = [];
+
+        function reset_state() {
+            stack = [];
+            seq = [];
+            state = { cur: 0, seq: "", accepting: null, next: null };
+            state.accepting = auto[0].a;
+            state.next = auto[0].t;
+            update_state();
+        }
+
+        function update_state() {
+            document.getElementById("input_seq").innerText = state.seq;
+            let next_chars = document.getElementById("next_chars");
+            if (state.next === null) {
+                next_chars.innerText = "∅";
+            } else {
+                next_chars.innerText = "";
+                state.next.forEach((value, key) => {
+                    next_chars.innerText += key;
+                })
+            }
+
+            let input_char = document.getElementById("input_char");
+            if (state.accepting === null) {
+                if (state.cur === 0) {
+                    input_char.innerText = "";
+                } else {
+                    input_char.innerText = "*intermediate state*";
+                }
+            } else {
+                input_char.innerText = state.accepting;
+            }
+        }
+
+        function set_lang(val) {
+            lang = val;
+            if (val === "lat") {
+                auto = latin_automaton;
+                document.getElementById("input_lang").innerText = "Latin";
+            } else if (val = "grc") {
+                auto = greek_automaton;
+                document.getElementById("input_lang").innerText = "Greek";
+            }
+            reset_state();
+        }
+
+        function move_state(char, next) {
+            stack.push(state.cur);
+            seq.push(char);
+            state = { cur: next, seq: auto[next].l, accepting: auto[next].a, next: auto[next].t };
+        }
+
+        function print_item(item, t, cur_pos) {
+            t.value = t.value.slice(0, cur_pos - 1).concat(item, t.value.slice(cur_pos - 1));
+        }
+
+        // TODO: Support accepting strings longer than one character
+        function next_state2(t, cur_pos, char) {
+            if (state.next !== null) {
+                if (state.next.has(char)) {
+                    let next = state.next.get(char);
+                    move_state(char, next);
+                    update_state();
+                    if (state.next === null && state.accepting !== null) {
+                        print_item(state.accepting, t, cur_pos);
+                        reset_state();
+                        return 0;
+                    }
+                } else {
+                    if (state.accepting !== null) {
+                        // print accepting char, continue to next sequeqnce
+                        print_item(state.accepting, t, cur_pos);
+                        reset_state();
+                        next_state2(t, cur_pos + 1, char) + 1;
+                        return 1;
+                    } else if (state.cur !== 0) {
+                        // print the sequence, continue on the new char
+                        print_item(seq.join(""), t, cur_pos);
+                        reset_state();
+                        next_state2(t, cur_pos + 1, char);
+                        return 1;
+                    } else if (state.cur == 0 && !state.next.has(char)) {
+                        print_item(char, t, cur_pos);
+                    }
+                }
+            }
+            return false;
+        }
+
+        function change_fn() {
+            let t = document.getElementById("text_area");
+            cur_pos = t.selectionStart;
+            console.log(cur_pos);
+            if (last_pos === null || cur_pos === last_pos) {
+                console.log("in seq");
+                if (last_pos === null) {
+                    reset_state();
+                }
+                let char = t.value.charAt(cur_pos - 1);
+                t.value = t.value.slice(0, cur_pos - 1) + t.value.slice(cur_pos);
+                cur_pos += next_state2(t, cur_pos, char);
+            } else {
+                // cursor moved somewhere else
+                console.log("resetting state...");
+                reset_state();
+                let char = t.value.charAt(cur_pos - 1);
+                t.value = t.value.slice(0, cur_pos - 1) + t.value.slice(cur_pos);
+                cur_pos += next_state2(t, cur_pos, char);
+            }
+            last_pos = cur_pos;
+        }
+
+        document.addEventListener('DOMContentLoaded',
+            function () {
+                set_lang("grc");
+            }, false);
+    </script>
+</head>
+
+<body>
+    <h1>Custom input method</h1>
+    <div class="langs">
+        <button value="lat" type="button" onclick="set_lang(this.value)">Latin</button>
+        <button value="grc" type="button" onclick="set_lang(this.value)">Greek</button>
+
+    </div>
+    <div class="info">
+        <ul>
+            <li>
+                <label>Current language:</label>
+                <label class="input_highlight" id="input_lang"></label>
+            </li>
+            <li>
+                <label>Character:</label>
+                <label class="input_highlight" id="input_char"></label>
+            </li>
+            <li>
+                <label>Current input sequence:</label>
+                <label class="input_highlight" id="input_seq"></label>
+            </li>
+            <li>
+                <label>Possible next characters:</label>
+                <label class="input_highlight" id="next_chars"></label>
+            </li>
+        </ul>
+
+    </div>
+    <div class="fill">
+        <textarea id="text_area" spellcheck="false" oninput="change_fn()"></textarea>
+    </div>
+</body>
+
+</html>
