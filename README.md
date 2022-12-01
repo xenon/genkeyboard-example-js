@@ -17,8 +17,8 @@ some information for the user to understand the layout.
 - Now you can type into the textbox and your characters will be mapped into the custom input method
 
 # Description of the page
-- Buttons: Select a langauge to use
-- Current Language: The currently selected langauge
+- Buttons: Select a language to use
+- Current Language: The currently selected language
 - Character: The current character that would be output if the sequence is terminated
 - Current input sequence: The characters typed on the keyboard to produce this output
 - Possible next character: Next typeable characters that eventually lead to some output character
