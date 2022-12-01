@@ -14,7 +14,7 @@ some information for the user to understand the layout.
 # Usage
 - Open index.html and click a button for the language you want to type in.
 - It should show Current Language: (SELECTED LANGUAGE)
-- Now as
+- Now you can type into the textbox and your characters will be mapped into the custom input method
 
 # Description of the page
 - Buttons: Select a langauge to use
