@@ -1,0 +1,182 @@
+:root {
+	--button-side: 5rem;
+	--tile-side: 20rem;
+	--light: #111111;
+	--light-off: #2d2d2d;
+	--dark: #ffffff;
+	--theme-light: #cc5200;
+	--theme: #ff6600;
+}
+
+body {
+	background: var(--light);
+	color: var(--dark);
+	font-weight: 300;
+
+	text-align: center;
+	margin: 0;
+	padding: 0;
+	height: 90vh;
+	overflow: hidden;
+	vertical-align: middle;
+	border: 1px solid red;
+}
+
+div {
+	overflow-y: auto;
+}
+
+path,
+rect,
+polygon,
+text {
+	fill: var(--theme-light);
+	fill-opacity: 0.4;
+	stroke: var(--theme);
+	stroke-opacity: 0.4;
+	stroke-width: 0.25rem;
+}
+
+a {
+	color: var(--theme);
+	text-decoration: none;
+}
+
+a:hover {
+	text-shadow: -0.1rem 0.1rem 0.1rem var(--light);
+}
+
+a.nostyle {
+	color: var(--dark);
+}
+
+a.nostyle:hover {
+	text-shadow: none;
+}
+
+h1 {
+	font-weight: 300;
+	font-size: 300%;
+	margin-top: 0.25em;
+	margin-bottom: 0.5em;
+}
+
+h2 {
+	font-weight: 300;
+	font-size: xx-large;
+	margin-top: 0.75em;
+	margin-bottom: 0.5em;
+}
+
+h3 {
+	font-weight: 400;
+}
+
+ul {
+	padding-left: 0;
+	list-style: none;
+	list-style-type: none;
+}
+
+.fill {
+	overflow: hidden;
+	display: flex;
+	height: 95%;
+	width: 100%;
+	border: 1px solid blue;
+}
+
+textarea {
+	box-sizing: border-box;
+	height: 100%;
+	width: 100%;
+	resize: none;
+}
+
+.input_highlight {
+	color: goldenrod;
+	font-weight: bold;
+	font-size: larger;
+}
+
+.footer {
+	justify-content: center;
+	text-align: center;
+}
+
+.tiles {
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
+	text-align: center;
+
+	border-radius: 4rem;
+	background-color: var(--light);
+	transition: background-color 0.1s linear;
+
+	border: 1rem solid var(--light);
+	margin: 0;
+}
+
+.tile {
+	display: flex;
+	flex-direction: column;
+	border-radius: 2rem;
+	margin: 1rem;
+	width: var(--tile-side);
+	height: var(--tile-side);
+	border: 0.25rem solid var(--light-off);
+	padding-left: 0.25rem;
+	padding-right: 0.25rem;
+	transition: background-color 0.2s linear;
+	transition: transform 0.2s linear;
+}
+
+.tilebutton {
+	border-radius: 0.5rem;
+	border-width: 0.125rem;
+	width: var(--button-side);
+	height: var(--button-side);
+}
+
+.tile:hover,
+a:focus .tile {
+	background-color: var(--theme-light);
+	transition: background-color 0.2s linear;
+	border-color: var(--theme-light);
+	transition: border-color 0.1s linear;
+	transform: translate3d(0.25rem, -0.25rem, 0);
+	transition: transform 0.2s linear;
+}
+
+.tile:hover path,
+.tile:hover rect,
+.tile:hover polygon,
+.tile:hover text,
+a:focus path,
+a:focus rect,
+a:focus polygon,
+a:focus text {
+	fill: var(--light);
+	fill-opacity: 0.75;
+	transition: fill 0.2s linear;
+	stroke: var(--dark);
+}
+
+.tablediv {
+	display: flex;
+	justify-content: center;
+}
+
+table,
+th,
+td {
+	border-collapse: collapse;
+	border: solid 1px var(--dark);
+	margin-bottom: 1em;
+}
+
+textarea {
+	background-color: var(--light);
+	color: var(--dark);
+}

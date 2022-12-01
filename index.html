@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Custom input method</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="global.css">
     <script src="input.js"></script>
     <script>
         var lang = null;
@@ -54,9 +55,12 @@
             if (val === "lat") {
                 auto = latin_automaton;
                 document.getElementById("input_lang").innerText = "Latin";
-            } else if (val = "grc") {
+            } else if (val === "grc") {
                 auto = greek_automaton;
                 document.getElementById("input_lang").innerText = "Greek";
+            } else if (val === "rus") {
+                auto = russian_automaton;
+                document.getElementById("input_lang").innerText = "Russian";
             }
             reset_state();
         }
@@ -73,10 +77,16 @@
 
         // TODO: Support accepting strings longer than one character
         function next_state2(t, cur_pos, char) {
+            if (char === '\"') {
+                console.log("found double quote");
+            }
             if (state.next !== null) {
                 if (state.next.has(char)) {
                     let next = state.next.get(char);
+                    console.log("next: " + next);
+                    console.log("curr state: " + JSON.stringify(state));
                     move_state(char, next);
+                    console.log("next state: " + JSON.stringify(state));
                     update_state();
                     if (state.next === null && state.accepting !== null) {
                         print_item(state.accepting, t, cur_pos);
@@ -139,7 +149,7 @@
     <div class="langs">
         <button value="lat" type="button" onclick="set_lang(this.value)">Latin</button>
         <button value="grc" type="button" onclick="set_lang(this.value)">Greek</button>
-
+        <button value="rus" type="button" onclick="set_lang(this.value)">Russian</button>
     </div>
     <div class="info">
         <ul>
